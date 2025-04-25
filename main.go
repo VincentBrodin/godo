@@ -3,39 +3,38 @@ package main
 import (
 	"fmt"
 	"os"
-	"path"
 
 	"github.com/VincentBrodin/godo/pkg/engine"
 	"github.com/VincentBrodin/godo/pkg/parser"
+	"github.com/VincentBrodin/godo/pkg/utils"
 )
 
 func main() {
-	args := os.Args[1:]
-	argc := len(args)
-
-	// No args
-	if argc <= 0 {
-		fmt.Println("No args")
-		return
-	}
-
-	// Find godo file
-	dir, err := os.Getwd()
+	// Start of by reading the file
+	data, err := utils.ReadByName("godo", ".exe", ".exe~", ".dll", ".so", ".dylib", ".test", ".out")
 	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	godoPath := path.Join(dir, "godo.yml")
-	data, err := os.ReadFile(godoPath)
-	if err != nil {
-		fmt.Println(err)
+		fmt.Println("No godo file found!")
 		return
 	}
 
 	godoFile, err := parser.Parse(data)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("Could not parse godo file: %s", err)
+		return
+	}
+
+	args := os.Args[1:]
+	argc := len(args)
+
+	// No args
+	if argc <= 0 {
+		for name, command := range godoFile.Commands {
+			if command.Description != nil {
+				fmt.Printf("%s: %s", name, *command.Description)
+			} else {
+				fmt.Printf("%s", name)
+			}
+		}
 		return
 	}
 
@@ -44,5 +43,9 @@ func main() {
 		fmt.Printf("%s is not a command in godo.yml\n", args[0])
 		return
 	}
-	fmt.Println(engine.Run(command))
+
+	if err := engine.Run(command); err != nil {
+		fmt.Println(err == nil)
+		fmt.Println(err)
+	}
 }
