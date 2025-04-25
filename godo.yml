@@ -1,12 +1,7 @@
 commands:
-  dev:
-    run: echo "Hello world" "Lets see if this works"
-    description: Run frontend and backend
-
-  frontend:
-    description: Start frontend dev server
-    run: cd frontend && npm run dev
-
-  backend:
-    description: Start backend
-    run: go run ./cmd/server
+  test:
+    run: 
+      - go clean -testcache
+      - go test ./... -v
+    description: Runs all the test
+  
