@@ -2,6 +2,7 @@ package engine
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 
@@ -21,17 +22,21 @@ func Run(cmd parser.Command) error {
 		switch t {
 		case "raw":
 			if err := rawRun(cmd, run); err != nil {
+				log.Printf("%s failed with %s\n", run, t)
 				return err
 			}
 		case "path":
 			if err := pathRun(cmd, run); err != nil {
+				log.Printf("%s failed with %s\n", run, t)
 				return err
 			}
 		case "shell":
 			if err := shellRun(cmd, run); err != nil {
+				log.Printf("%s failed with %s\n", run, t)
 				return err
 			}
 		default:
+			log.Printf("Unkown run type: %s. Only allows: 'raw','path' or 'shell' (defualt 'shell')\n", t)
 			return fmt.Errorf("Unkown run type: %s. Only allows: 'raw','path' or 'shell' (defualt 'shell')\n", t)
 		}
 	}
@@ -55,11 +60,8 @@ func pathRun(command parser.Command, run string) error {
 	if wd, err := getDir(command); err == nil {
 		cmd.Dir = wd
 	}
-	if command.Wait {
-		return cmd.Start()
-	} else {
-		return cmd.Run()
-	}
+
+	return cmd.Run()
 }
 
 func rawRun(command parser.Command, run string) error {
@@ -73,12 +75,8 @@ func rawRun(command parser.Command, run string) error {
 	if wd, err := getDir(command); err == nil {
 		cmd.Dir = wd
 	}
-	if command.Wait {
-		return cmd.Start()
-	} else {
-		return cmd.Run()
-	}
 
+	return cmd.Run()
 }
 
 func shellRun(command parser.Command, run string) error {
@@ -96,10 +94,6 @@ func shellRun(command parser.Command, run string) error {
 	if wd, err := getDir(command); err == nil {
 		cmd.Dir = wd
 	}
-	if command.Wait {
-		return cmd.Start()
-	} else {
-		return cmd.Run()
-	}
 
+	return cmd.Run()
 }
