@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path"
-	"runtime"
 
 	"github.com/VincentBrodin/godo/pkg/parser"
 	"github.com/google/shlex"
@@ -13,9 +11,9 @@ import (
 
 // Run the command
 func Run(cmd parser.Command) error {
-	t := ""
+	var t string
 	if cmd.Type == nil {
-		t = "path"
+		t = "shell"
 	} else {
 		t = *cmd.Type
 	}
@@ -34,22 +32,10 @@ func Run(cmd parser.Command) error {
 				return err
 			}
 		default:
-			return fmt.Errorf("Unkown run type: %s. Only allows: 'raw','path' or 'shell' (defualt 'path')\n")
+			return fmt.Errorf("Unkown run type: %s. Only allows: 'raw','path' or 'shell' (defualt 'shell')\n", t)
 		}
 	}
 	return nil
-}
-
-func getDir(command parser.Command) (string, error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return wd, err
-	}
-
-	if command.Where != nil {
-		wd = path.Join(wd, *command.Where)
-	}
-	return wd, nil
 }
 
 func pathRun(command parser.Command, run string) error {
@@ -101,16 +87,7 @@ func shellRun(command parser.Command, run string) error {
 		return err
 	}
 
-	var shell string
-	var args []string
-
-	if runtime.GOOS == "windows" {
-		shell = "cmd"
-		args = []string{"/C"}
-	} else {
-		shell = "sh"
-		args = []string{"-c"}
-	}
+	shell, args := getShell()
 
 	args = append(args, split...)
 	cmd := exec.Command(shell, args...)
