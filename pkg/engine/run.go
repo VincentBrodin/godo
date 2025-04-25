@@ -1,31 +1,56 @@
 package engine
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"runtime"
 
 	"github.com/VincentBrodin/godo/pkg/parser"
 	"github.com/google/shlex"
 )
 
-func Run(command parser.Command) {
+func Run(command parser.Command) error {
+	var totErrs error
 	for _, run := range command.Run {
-		if err := rawRun(run); err == nil {
-			break
+		tempErr := rawRun(command, run)
+		if tempErr == nil {
+			continue
 		}
+		errs := errors.Join(tempErr)
 
-		if err := pathRun(run); err == nil {
-			break
+		tempErr = pathRun(command, run)
+		if tempErr == nil {
+			continue
 		}
+		errs = errors.Join(tempErr)
 
-		if err := shellRun(run); err == nil {
-			break
+		tempErr = shellRun(command, run)
+		if tempErr == nil {
+			continue
 		}
+		errs = errors.Join(tempErr)
+		totErrs = errors.Join(errs)
 	}
+
+	return totErrs
 }
 
-func pathRun(run string) error {
+func getDir(command parser.Command) (string, error) {
+	wd, err := os.Getwd()
+	if err != nil {
+		return wd, err
+	}
+
+	if command.Where != nil {
+		wd = path.Join(wd, *command.Where)
+	}
+	return wd, nil
+}
+
+func pathRun(command parser.Command, run string) error {
 	split, err := shlex.Split(run)
 	if err != nil {
 		return err
@@ -39,10 +64,13 @@ func pathRun(run string) error {
 	cmd := exec.Command(path, split[1:]...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	if wd, err := getDir(command); err != nil {
+		cmd.Dir = wd
+	}
 	return cmd.Run()
 }
 
-func rawRun(run string) error {
+func rawRun(command parser.Command, run string) error {
 	split, err := shlex.Split(run)
 	if err != nil {
 		return err
@@ -50,10 +78,13 @@ func rawRun(run string) error {
 	cmd := exec.Command(split[0], split[1:]...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	if wd, err := getDir(command); err != nil {
+		cmd.Dir = wd
+	}
 	return cmd.Run()
 }
 
-func shellRun(run string) error {
+func shellRun(command parser.Command, run string) error {
 	split, err := shlex.Split(run)
 	if err != nil {
 		return err
@@ -74,5 +105,8 @@ func shellRun(run string) error {
 	cmd := exec.Command(shell, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	if wd, err := getDir(command); err != nil {
+		cmd.Dir = wd
+	}
 	return cmd.Run()
 }

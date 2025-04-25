@@ -39,5 +39,5 @@ func main() {
 	}
 
 	command := godoFile.Commands[args[0]]
-	engine.Run(command)
+	fmt.Println(engine.Run(command))
 }
