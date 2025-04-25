@@ -16,6 +16,7 @@ func main() {
 	// No args
 	if argc <= 0 {
 		fmt.Println("No args")
+		return
 	}
 
 	// Find godo file
@@ -38,6 +39,10 @@ func main() {
 		return
 	}
 
-	command := godoFile.Commands[args[0]]
+	command, ok := godoFile.Commands[args[0]]
+	if !ok {
+		fmt.Printf("%s is not a command in godo.yml\n", args[0])
+		return
+	}
 	fmt.Println(engine.Run(command))
 }
