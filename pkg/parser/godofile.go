@@ -6,7 +6,6 @@ type GodoFile struct {
 
 type Command struct {
 	Run         Run     `yaml:"run"`
-	Wait        bool    `yaml:"spawn"`
 	Where       *string `yaml:"where"`
 	Type        *string `yaml:"type"`
 	Description *string `yaml:"description"`
