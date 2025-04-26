@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	fmt.Println("godo v0.0.1 - dev")
 	// Start of by reading the file
 	data, err := utils.ReadByName("godo", ".exe", ".exe~", ".dll", ".so", ".dylib", ".test", ".out")
 	if err != nil {
