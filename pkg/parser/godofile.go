@@ -1,5 +1,11 @@
 package parser
 
+const (
+	SHELL = "shell"
+	RAW   = "raw"
+	PATH  = "path"
+)
+
 type GodoFile struct {
 	Commands map[string]Command `yaml:"commands"`
 }
