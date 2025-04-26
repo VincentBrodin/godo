@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path"
@@ -31,14 +32,41 @@ func getShell() (string, []string) {
 	return shell, args
 }
 
-func getDir(command parser.Command) (string, error) {
+func getDir(cmd parser.Command) (string, error) {
 	wd, err := os.Getwd()
 	if err != nil {
 		return wd, err
 	}
 
-	if command.Where != nil {
-		wd = path.Join(wd, *command.Where)
+	if cmd.Where != nil {
+		wd = path.Join(wd, *cmd.Where)
 	}
 	return wd, nil
+}
+
+func getRunAndType(cmd parser.Command) (parser.Run, *string, error) {
+	if cmd.Run == nil {
+		if len(cmd.Variants) == 0 {
+			return nil, nil, fmt.Errorf("Command has nothing to run\n")
+		}
+
+		// Check for platform
+		for _, variant := range cmd.Variants {
+			if variant.Platform == runtime.GOOS {
+				return variant.Run, variant.Type, nil
+			}
+		}
+
+		// Check for fallback
+		for _, variant := range cmd.Variants {
+			if variant.Platform == "defualt" {
+				return variant.Run, variant.Type, nil
+			}
+		}
+
+		return nil, nil, fmt.Errorf("Could not find a variant that matches system os (%s)\n", runtime.GOOS)
+	} else {
+		return *cmd.Run, cmd.Type, nil
+	}
+
 }
