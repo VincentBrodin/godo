@@ -30,9 +30,9 @@ func main() {
 	if argc <= 0 {
 		for name, command := range godoFile.Commands {
 			if command.Description != nil {
-				fmt.Printf("%s: %s", name, *command.Description)
+				fmt.Printf("%s:\n  -  %s\n", name, *command.Description)
 			} else {
-				fmt.Printf("%s", name)
+				fmt.Printf("%s\n", name)
 			}
 		}
 		return

@@ -3,8 +3,10 @@ godo is a modern take on Make with some needed QoL changes.
 
 ## Features
 - **where** allows you to run a command from any child directory.
+- **variants** os indipendent commands.
 - **description** tell exactly what the build command does.
 - **fallback** if you don't rember what build commands you have, simply run godo without a command and godo will tell you what commands you have.
+
 
 ## Syntax
 
@@ -47,4 +49,14 @@ Use `go install` to grab the latest build:
 # Latest 
 go install github.com/VincentBrodin/godo@latest
 ```
+
+## Tips
+
+You can run godo commands from inside of godo, so if you have big complex commands for your build system you can split them up into there own smaller godo commands.
+
+
+### Contribute
+
+If you like the idea of godo and what to help improve it please do. Any improvements are welcomed.
+
 
