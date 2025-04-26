@@ -21,7 +21,7 @@ func resolve(cmd parser.Command) (ResolvedCommand, error) {
 
 	var t string
 	if _t == nil {
-		t = "shell"
+		t = getDefaultType()
 	} else {
 		t = *_t
 	}

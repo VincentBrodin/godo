@@ -10,6 +10,18 @@ import (
 	"github.com/VincentBrodin/godo/pkg/parser"
 )
 
+// Returns recomended defualt running type based on os
+func getDefaultType() string {
+	switch runtime.GOOS {
+	case "windows":
+		return parser.SHELL
+	case "linux":
+		return parser.RAW
+	default:
+		return parser.RAW
+	}
+}
+
 func getShell() (string, []string) {
 	var shell string
 	var args []string
