@@ -39,7 +39,7 @@ outer:
 			return nil, err
 		}
 
-		return os.ReadFile(info.Name()) 
+		return os.ReadFile(info.Name())
 	}
 
 	return nil, fmt.Errorf("Could not find any file with the name: %s\n", name)

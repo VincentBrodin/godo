@@ -1,8 +1,8 @@
 package utils_test
 
 import (
-	"testing"
 	"github.com/VincentBrodin/godo/pkg/utils"
+	"testing"
 )
 
 func TestCutExtension(t *testing.T) {
