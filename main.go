@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-	fmt.Println("godo v0.0.1 - dev")
 	// Start of by reading the file
 	data, err := utils.ReadByName("godo", ".exe", ".exe~", ".dll", ".so", ".dylib", ".test", ".out")
 	if err != nil {
@@ -39,14 +38,14 @@ func main() {
 		return
 	}
 
+	// Select command
 	command, ok := godoFile.Commands[args[0]]
 	if !ok {
-		fmt.Printf("%s is not a command in godo.yml\n", args[0])
+		fmt.Printf("%s is not a command in godo file\n", args[0])
 		return
 	}
 
 	if err := engine.Run(command); err != nil {
-		fmt.Println(err == nil)
 		fmt.Println(err)
 	}
 }

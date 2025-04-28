@@ -1,4 +1,7 @@
 commands:
+  install:
+    run: go install ./...
+    description: Installs godo from your local source code
   test:
     run: 
       - go clean -testcache
