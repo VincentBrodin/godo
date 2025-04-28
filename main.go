@@ -30,22 +30,22 @@ func main() {
 	if argc <= 0 {
 		for name, command := range godoFile.Commands {
 			if command.Description != nil {
-				fmt.Printf("%s: %s", name, *command.Description)
+				fmt.Printf("%s:\n  -  %s\n", name, *command.Description)
 			} else {
-				fmt.Printf("%s", name)
+				fmt.Printf("%s\n", name)
 			}
 		}
 		return
 	}
 
+	// Select command
 	command, ok := godoFile.Commands[args[0]]
 	if !ok {
-		fmt.Printf("%s is not a command in godo.yml\n", args[0])
+		fmt.Printf("%s is not a command in godo file\n", args[0])
 		return
 	}
 
 	if err := engine.Run(command); err != nil {
-		fmt.Println(err == nil)
 		fmt.Println(err)
 	}
 }
