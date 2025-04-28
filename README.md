@@ -7,11 +7,10 @@ Godo is a modern, Make‑inspired task runner, designed to make your build and a
 ## Table of Contents
 1. [Features](#features)
 2. [Getting Started](#getting-started)
-3. [Configuration Syntax](#configuration-syntax)
-4. [Installation](#installation)
-5. [Usage & Tips](#usage--tips)
-6. [Contributing](#contributing)
-7. [License](#license)
+3. [Installation](#installation)
+4. [Usage & Tips](#usage--tips)
+5. [Contributing](#contributing)
+6. [License](#license)
 
 ---
 
