@@ -2,6 +2,13 @@ commands:
   install:
     run: go install ./...
     description: Installs godo from your local source code
+  fail:
+    run: 
+      - $a
+      - $b
+      - echo Works
+    description: This code will fail twice
+
   test:
     run: 
       - go clean -testcache
