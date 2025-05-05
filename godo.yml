@@ -12,8 +12,16 @@ commands:
   test:
     run: 
       - go clean -testcache
-      - go test ./... -v
+      - go test ./...
     description: Runs all the test
+
+  testv:
+    run: 
+      - go clean -testcache
+      - go test ./... -v
+    description: Runs all the test in verbose mode
+
+
   os: # Variants allow os indipendent commands to be ran the platform is based on GOOS. 
       # Here is a list of possible GOOS: https://gist.github.com/asukakenji/f15ba7e588ac42795f421b48b8aede63
     variants:

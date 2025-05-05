@@ -31,3 +31,7 @@ func (r *Run) UnmarshalYAML(value *yaml.Node) error {
 	}
 	return fmt.Errorf("invalid run format")
 }
+
+func (r *Run) Add(value string) {
+	*r = append(*r, value)
+}
