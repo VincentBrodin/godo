@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/VincentBrodin/godo/pkg/utils"
 	"github.com/google/shlex"
 )
 
@@ -25,7 +26,7 @@ func runShell(resCmd ResolvedCommand) error {
 			return err
 		}
 
-		shell, args := getShell()
+		shell, args := utils.GetShell()
 
 		args = append(args, split...)
 		cmd := exec.Command(shell, args...)

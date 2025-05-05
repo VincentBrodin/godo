@@ -1,6 +1,9 @@
 package engine
 
-import "github.com/VincentBrodin/godo/pkg/parser"
+import (
+	"github.com/VincentBrodin/godo/pkg/parser"
+	"github.com/VincentBrodin/godo/pkg/utils"
+)
 
 type ResolvedCommand struct {
 	Run   []string
@@ -9,19 +12,19 @@ type ResolvedCommand struct {
 }
 
 func resolve(cmd parser.Command) (ResolvedCommand, error) {
-	where, err := getDir(cmd)
+	where, err := utils.GetDir(cmd)
 	if err != nil {
 		return ResolvedCommand{}, err
 	}
 
-	run, _t, err := getRunAndType(cmd)
+	run, _t, err := utils.GetRunAndType(cmd)
 	if err != nil {
 		return ResolvedCommand{}, err
 	}
 
 	var t string
 	if _t == nil {
-		t = getDefaultType()
+		t = utils.GetDefaultType()
 	} else {
 		t = *_t
 	}
