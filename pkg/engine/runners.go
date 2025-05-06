@@ -3,6 +3,7 @@ package engine
 import (
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/VincentBrodin/godo/pkg/utils"
 	"github.com/google/shlex"
@@ -11,12 +12,13 @@ import (
 func runShell(resCmd ResolvedCommand) error {
 	for _, run := range resCmd.Run {
 		// EMPTY
+		run = strings.TrimSpace(run)
 		if len(run) == 0 {
 			continue
 		}
 		// Check if is banglines
 		canFail := false
-		if run[0] == '$' {
+		if strings.HasPrefix(run, "$") {
 			canFail = true
 			run = run[1:]
 		}
