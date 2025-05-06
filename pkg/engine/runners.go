@@ -81,7 +81,7 @@ func runPath(resCmd ResolvedCommand) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
-		if err := cmd.Run(); err != nil {
+		if err := cmd.Run(); err != nil && !canFail{
 			return err
 		}
 
@@ -118,7 +118,7 @@ func runRaw(resCmd ResolvedCommand) error {
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
 
-		if err := cmd.Run(); err != nil {
+		if err := cmd.Run(); err != nil && !canFail{
 			return err
 		}
 
