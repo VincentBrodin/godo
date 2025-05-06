@@ -3,11 +3,15 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/VincentBrodin/godo/pkg/engine"
 	"github.com/VincentBrodin/godo/pkg/parser"
 	"github.com/VincentBrodin/godo/pkg/utils"
+
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
+	"slices"
 )
 
 func main() {
@@ -61,11 +65,34 @@ func loadFile() (*parser.GodoFile, error) {
 }
 
 func listCommands(godoFile *parser.GodoFile) {
-	for name, command := range godoFile.Commands {
-		if command.Description != nil {
-			fmt.Printf("%s:\n  -  %s\n", name, *command.Description)
-		} else {
-			fmt.Printf("%s\n", name)
+	keys := make([]string, 0, len(godoFile.Commands))
+	for k := range godoFile.Commands {
+		keys = append(keys, k)
+	}
+	slices.Sort(keys)
+	keys = append(keys, "close")
+
+	prompt := promptui.Select{
+		Label: "Select command",
+		Searcher: func(input string, index int) bool {
+			return strings.HasPrefix(keys[index], input)
+		},
+		Size:  len(keys),
+		Items: keys,
+	}
+	index, result, err := prompt.Run()
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return
+	}
+
+	if index == len(keys)-1 {
+		return
+	} else {
+		if err := engine.Run(godoFile.Commands[result]); err != nil {
+			fmt.Println(err)
 		}
+
 	}
 }
