@@ -19,7 +19,6 @@ func runShell(resCmd ResolvedCommand) error {
 			continue
 		}
 		// Check if is banglines
-		fmt.Println(run)
 		run, canFail := utils.CanFail(run)
 
 		if canFail {
@@ -40,8 +39,13 @@ func runShell(resCmd ResolvedCommand) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
-		if err := cmd.Run(); err != nil && !canFail {
-			return err
+
+		if err := cmd.Run(); err != nil{
+			if canFail {
+				log.Printf("%s failed but will keep running: %v", run, err)
+			} else {
+				return err
+			}
 		}
 
 	}
@@ -58,7 +62,6 @@ func runPath(resCmd ResolvedCommand) error {
 			continue
 		}
 		// Check if is banglines
-		fmt.Println(run)
 		run, canFail := utils.CanFail(run)
 
 		if canFail {
@@ -81,8 +84,13 @@ func runPath(resCmd ResolvedCommand) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
-		if err := cmd.Run(); err != nil && !canFail{
-			return err
+
+		if err := cmd.Run(); err != nil{
+			if canFail {
+				log.Printf("%s failed but will keep running: %v", run, err)
+			} else {
+				return err
+			}
 		}
 
 	}
@@ -98,7 +106,6 @@ func runRaw(resCmd ResolvedCommand) error {
 			continue
 		}
 		// Check if is banglines
-		fmt.Println(run)
 		run, canFail := utils.CanFail(run)
 
 		if canFail {
@@ -118,8 +125,12 @@ func runRaw(resCmd ResolvedCommand) error {
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
 
-		if err := cmd.Run(); err != nil && !canFail{
-			return err
+		if err := cmd.Run(); err != nil{
+			if canFail {
+				log.Printf("%s failed but will keep running: %v", run, err)
+			} else {
+				return err
+			}
 		}
 
 	}
