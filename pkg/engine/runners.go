@@ -1,6 +1,8 @@
 package engine
 
 import (
+	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -17,10 +19,13 @@ func runShell(resCmd ResolvedCommand) error {
 			continue
 		}
 		// Check if is banglines
-		canFail := false
-		if strings.HasPrefix(run, "$") {
-			canFail = true
-			run = run[1:]
+		fmt.Println(run)
+		run, canFail := utils.CanFail(run)
+
+		if canFail {
+			log.Printf("Running %s (can fail)\n", run)
+		} else {
+			log.Printf("Running %s\n", run)
 		}
 
 		split, err := shlex.Split(run)
@@ -45,7 +50,23 @@ func runShell(resCmd ResolvedCommand) error {
 }
 
 func runPath(resCmd ResolvedCommand) error {
+
 	for _, run := range resCmd.Run {
+		// EMPTY
+		run = strings.TrimSpace(run)
+		if len(run) == 0 {
+			continue
+		}
+		// Check if is banglines
+		fmt.Println(run)
+		run, canFail := utils.CanFail(run)
+
+		if canFail {
+			log.Printf("Running %s (can fail)\n", run)
+		} else {
+			log.Printf("Running %s\n", run)
+		}
+
 		split, err := shlex.Split(run)
 		if err != nil {
 			return err
@@ -71,6 +92,21 @@ func runPath(resCmd ResolvedCommand) error {
 
 func runRaw(resCmd ResolvedCommand) error {
 	for _, run := range resCmd.Run {
+		// EMPTY
+		run = strings.TrimSpace(run)
+		if len(run) == 0 {
+			continue
+		}
+		// Check if is banglines
+		fmt.Println(run)
+		run, canFail := utils.CanFail(run)
+
+		if canFail {
+			log.Printf("Running %s (can fail)\n", run)
+		} else {
+			log.Printf("Running %s\n", run)
+		}
+
 		split, err := shlex.Split(run)
 		if err != nil {
 			return err
