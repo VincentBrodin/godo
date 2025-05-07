@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"path"
 	"runtime"
+	"strings"
 
 	"github.com/VincentBrodin/godo/pkg/parser"
 )
@@ -143,4 +144,14 @@ func GetRunAndType(cmd parser.Command) (parser.Run, *string, error) {
 		return *cmd.Run, cmd.Type, nil
 	}
 
+}
+
+func CanFail(run string) (string, bool) {
+	// Check if is banglines
+	canFail := false
+	if strings.HasPrefix(run, "$") {
+		canFail = true
+		run = run[1:]
+	}
+	return run, canFail
 }

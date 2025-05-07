@@ -24,3 +24,19 @@ func TestGetExtension(t *testing.T) {
 		t.FailNow()
 	}
 }
+
+func TestCanFail(t *testing.T) {
+	expected := "test"
+	inputA := "$test"
+	inputB := "test"
+
+	if str, canFail := utils.CanFail(inputA); str != expected || !canFail {
+		t.Logf("Input A failed")
+		t.FailNow()
+	}
+
+	if str, canFail := utils.CanFail(inputB); str != expected || canFail {
+		t.Logf("Input B failed")
+		t.FailNow()
+	}
+}

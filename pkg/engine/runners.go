@@ -1,8 +1,10 @@
 package engine
 
 import (
+	"log"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/VincentBrodin/godo/pkg/utils"
 	"github.com/google/shlex"
@@ -11,14 +13,17 @@ import (
 func runShell(resCmd ResolvedCommand) error {
 	for _, run := range resCmd.Run {
 		// EMPTY
+		run = strings.TrimSpace(run)
 		if len(run) == 0 {
 			continue
 		}
 		// Check if is banglines
-		canFail := false
-		if run[0] == '$' {
-			canFail = true
-			run = run[1:]
+		run, canFail := utils.CanFail(run)
+
+		if canFail {
+			log.Printf("Running %s (can fail)\n", run)
+		} else {
+			log.Printf("Running %s\n", run)
 		}
 
 		split, err := shlex.Split(run)
@@ -33,8 +38,13 @@ func runShell(resCmd ResolvedCommand) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
-		if err := cmd.Run(); err != nil && !canFail {
-			return err
+
+		if err := cmd.Run(); err != nil{
+			if canFail {
+				log.Printf("%s failed but will keep running: %v", run, err)
+			} else {
+				return err
+			}
 		}
 
 	}
@@ -43,7 +53,22 @@ func runShell(resCmd ResolvedCommand) error {
 }
 
 func runPath(resCmd ResolvedCommand) error {
+
 	for _, run := range resCmd.Run {
+		// EMPTY
+		run = strings.TrimSpace(run)
+		if len(run) == 0 {
+			continue
+		}
+		// Check if is banglines
+		run, canFail := utils.CanFail(run)
+
+		if canFail {
+			log.Printf("Running %s (can fail)\n", run)
+		} else {
+			log.Printf("Running %s\n", run)
+		}
+
 		split, err := shlex.Split(run)
 		if err != nil {
 			return err
@@ -58,8 +83,13 @@ func runPath(resCmd ResolvedCommand) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
-		if err := cmd.Run(); err != nil {
-			return err
+
+		if err := cmd.Run(); err != nil{
+			if canFail {
+				log.Printf("%s failed but will keep running: %v", run, err)
+			} else {
+				return err
+			}
 		}
 
 	}
@@ -69,6 +99,20 @@ func runPath(resCmd ResolvedCommand) error {
 
 func runRaw(resCmd ResolvedCommand) error {
 	for _, run := range resCmd.Run {
+		// EMPTY
+		run = strings.TrimSpace(run)
+		if len(run) == 0 {
+			continue
+		}
+		// Check if is banglines
+		run, canFail := utils.CanFail(run)
+
+		if canFail {
+			log.Printf("Running %s (can fail)\n", run)
+		} else {
+			log.Printf("Running %s\n", run)
+		}
+
 		split, err := shlex.Split(run)
 		if err != nil {
 			return err
@@ -80,8 +124,12 @@ func runRaw(resCmd ResolvedCommand) error {
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
 
-		if err := cmd.Run(); err != nil {
-			return err
+		if err := cmd.Run(); err != nil{
+			if canFail {
+				log.Printf("%s failed but will keep running: %v", run, err)
+			} else {
+				return err
+			}
 		}
 
 	}
