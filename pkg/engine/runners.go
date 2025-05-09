@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -39,9 +40,9 @@ func runShell(resCmd ResolvedCommand) error {
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
 
-		if err := cmd.Run(); err != nil{
+		if err := runCmd(cmd); err != nil {
 			if canFail {
-				log.Printf("%s failed but will keep running: %v", run, err)
+				log.Printf("Got an error running '%s', but will keep running: %v\n", run, err)
 			} else {
 				return err
 			}
@@ -84,9 +85,9 @@ func runPath(resCmd ResolvedCommand) error {
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
 
-		if err := cmd.Run(); err != nil{
+		if err := runCmd(cmd); err != nil {
 			if canFail {
-				log.Printf("%s failed but will keep running: %v", run, err)
+				log.Printf("Got an error running '%s', but will keep running: %v\n", run, err)
 			} else {
 				return err
 			}
@@ -104,7 +105,6 @@ func runRaw(resCmd ResolvedCommand) error {
 		if len(run) == 0 {
 			continue
 		}
-		// Check if is banglines
 		run, canFail := utils.CanFail(run)
 
 		if canFail {
@@ -124,14 +124,24 @@ func runRaw(resCmd ResolvedCommand) error {
 		cmd.Stderr = os.Stderr
 		cmd.Dir = resCmd.Where
 
-		if err := cmd.Run(); err != nil{
+		if err := runCmd(cmd); err != nil {
 			if canFail {
-				log.Printf("%s failed but will keep running: %v", run, err)
+				log.Printf("Got an error running '%s', but will keep running: %v\n", run, err)
 			} else {
 				return err
 			}
 		}
 
 	}
+	return nil
+}
+
+func runCmd(cmd *exec.Cmd) error {
+	if err := cmd.Run(); err != nil {
+		return err
+	} else if exit := cmd.ProcessState.ExitCode(); exit != 0 {
+		return fmt.Errorf("Exited with status code %d\n", exit)
+	}
+
 	return nil
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -28,45 +29,48 @@ func main() {
 			}
 
 			if len(args) == 0 {
-				listCommands(godoFile)
-				return
+				if err := listCommands(godoFile); err != nil {
+					// fmt.Println(err)
+					os.Exit(2)
+				}
 			}
 
 			command, ok := godoFile.Commands[args[0]]
 			if !ok {
 				fmt.Printf("%s is not a command in godo file\n", args[0])
-				return
+				os.Exit(3)
 			}
 
 			if err := engine.Run(command); err != nil {
-				fmt.Println(err)
+				// fmt.Println(err)
+				os.Exit(2)
 			}
 		},
 	}
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		// os.Exit(1)
 	}
 }
 
 func loadFile() (*parser.GodoFile, error) {
 	file, err := utils.ReadByName("godo", ".exe", ".exe~", ".dll", ".so", ".dylib", ".test", ".out")
 	if err != nil {
-		fmt.Println("No godo file found!")
+		log.Println("No godo file found!")
 		return nil, err
 	}
 
 	godoFile, err := parser.Parse(file)
 	if err != nil {
-		fmt.Printf("Could not parse godo file: %s", err)
+		log.Printf("Could not parse godo file: %s", err)
 		return nil, err
 	}
 
 	return godoFile, nil
 }
 
-func listCommands(godoFile *parser.GodoFile) {
+func listCommands(godoFile *parser.GodoFile) error {
 	keys := make([]string, 0, len(godoFile.Commands))
 	for k := range godoFile.Commands {
 		keys = append(keys, k)
@@ -89,16 +93,17 @@ func listCommands(godoFile *parser.GodoFile) {
 	index, result, err := prompt.Run()
 
 	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		return
+		log.Printf("Prompt failed %v\n", err)
+		return err
 	}
 
 	if index == len(keys)-1 {
-		return
+		return nil
 	} else {
 		if err := engine.Run(godoFile.Commands[result]); err != nil {
 			fmt.Println(err)
+			return err
 		}
-
 	}
+	return nil
 }
