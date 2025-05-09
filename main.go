@@ -8,10 +8,12 @@ import (
 	"github.com/VincentBrodin/godo/pkg/engine"
 	"github.com/VincentBrodin/godo/pkg/parser"
 	"github.com/VincentBrodin/godo/pkg/utils"
+	"github.com/VincentBrodin/suddig/matcher"
+
+	"slices"
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
-	"slices"
 )
 
 func main() {
@@ -75,7 +77,11 @@ func listCommands(godoFile *parser.GodoFile) {
 	prompt := promptui.Select{
 		Label: "Select command",
 		Searcher: func(input string, index int) bool {
-			return strings.HasPrefix(keys[index], input)
+			c := matcher.DefualtConfig()
+			c.MinScore = 0.5
+			c.StringFunc = func(s string) string { return strings.ToLower(s) }
+			m := matcher.New(c)
+			return m.Match(input, keys[index]) || strings.HasPrefix(keys[index], input)
 		},
 		Size:  len(keys),
 		Items: keys,

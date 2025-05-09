@@ -7,6 +7,7 @@ import (
 
 type ResolvedCommand struct {
 	Run   []string
+	Times int32
 	Where string
 	Type  string
 }
@@ -29,8 +30,14 @@ func resolve(cmd parser.Command) (ResolvedCommand, error) {
 		t = *_t
 	}
 
+	var times int32 = 1
+	if cmd.Times != nil {
+		times = *cmd.Times
+	} 
+
 	return ResolvedCommand{
 		Run:   run,
+		Times: times,
 		Where: where,
 		Type:  t,
 	}, nil

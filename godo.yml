@@ -1,4 +1,9 @@
 commands:
+  loop:
+    run: echo "Hello world"
+    times: 10
+    description: "Runs command 10 times"
+  
   install:
     run: go install ./...
     description: Installs godo from your local source code

@@ -1,6 +1,6 @@
 module github.com/VincentBrodin/godo
 
-go 1.24.0
+go 1.24.3
 
 require (
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // direct
@@ -18,4 +18,7 @@ require (
 	golang.org/x/sys v0.17.0 // indirect
 )
 
-require github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
+require (
+	github.com/VincentBrodin/suddig v0.0.0-20250508204840-870ec81c7636
+	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
+)

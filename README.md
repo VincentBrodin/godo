@@ -17,6 +17,7 @@ Godo is a modern, Make‑inspired task runner, designed to make your build and a
 ## Features
 
 - **`where`**: Execute commands from any subdirectory, without manual `cd` steps.
+- **`times`**: Execute commands any amount of times in a loop.
 - **`variants`**: Define OS‑ or environment‑specific command variants (based on `GOOS`).
 - **`description`**: Provide human‑readable explanations for each task.
 - **Fallback Help**: Running `godo` with no arguments lists all available tasks and their descriptions.
@@ -50,6 +51,7 @@ Each task under `commands:` can include:
 
 - **`run`** *(array of strings)*: One or more shell commands executed in sequence.  
 - **`where`** *(string)*: Relative path to the directory where commands run (defaults to project root).  
+- **`times`** *(int)*: Defualt is 1. Runs all the commands in the run field x amount of times, works for variants as well.  
 - **`type`** *(string)*: Execution mode (`raw`, `shell`, or `path`). Usually, the default is sufficient.  
 - **`description`** *(string)*: A short description for `godo`’s help output.  
 - **`variants`** *(array)*: Platform or environment–specific overrides (ignores `run` at the root):
@@ -73,7 +75,7 @@ Ensure `$GOPATH/bin` (or `$GOBIN`) is in your `PATH`.
 
 - Run `godo` to list all tasks and descriptions.
 - Execute a task: `godo <task-name>` (e.g., `godo test`).
-- Combine complex workflows by breaking them into smaller, reusable `godo` tasks.
+- Combine complex workflows by breaking them into smaller, reusable `godo` tasks, also great for loops.
 
 ## Contributing
 
