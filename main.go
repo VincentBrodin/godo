@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/VincentBrodin/godo/pkg/engine"
@@ -25,19 +25,35 @@ func main() {
 		Run: func(cmd *cobra.Command, args []string) {
 			godoFile, err := loadFile()
 			if err != nil {
-				return
+				if args[0] == "init" {
+					wd, err := os.Getwd()
+					if err != nil {
+						os.Exit(5)
+					}
+
+					name := path.Join(wd, "godo.yml")
+					if err := os.WriteFile(name, []byte(Init), 0664); err != nil {
+						log.Printf("Problem creating godo file: %v\n", err)
+						os.Exit(6)
+					}
+					log.Printf("Created godo file @ %s\n", name)
+					os.Exit(0)
+				} else {
+					log.Printf("Problem reading godo file: %v\n", err)
+					os.Exit(4)
+				}
 			}
 
 			if len(args) == 0 {
 				if err := listCommands(godoFile); err != nil {
-					// fmt.Println(err)
 					os.Exit(2)
 				}
+				return
 			}
 
 			command, ok := godoFile.Commands[args[0]]
 			if !ok {
-				fmt.Printf("%s is not a command in godo file\n", args[0])
+				log.Printf("%s is not a command in godo file\n", args[0])
 				os.Exit(3)
 			}
 
@@ -49,7 +65,7 @@ func main() {
 	}
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		log.Printf("Got an error: %v\n", err)
 		// os.Exit(1)
 	}
 }
@@ -57,13 +73,11 @@ func main() {
 func loadFile() (*parser.GodoFile, error) {
 	file, err := utils.ReadByName("godo", ".exe", ".exe~", ".dll", ".so", ".dylib", ".test", ".out")
 	if err != nil {
-		log.Println("No godo file found!")
 		return nil, err
 	}
 
 	godoFile, err := parser.Parse(file)
 	if err != nil {
-		log.Printf("Could not parse godo file: %s", err)
 		return nil, err
 	}
 
@@ -101,7 +115,6 @@ func listCommands(godoFile *parser.GodoFile) error {
 		return nil
 	} else {
 		if err := engine.Run(godoFile.Commands[result]); err != nil {
-			fmt.Println(err)
 			return err
 		}
 	}
