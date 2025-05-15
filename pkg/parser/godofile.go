@@ -13,6 +13,7 @@ type GodoFile struct {
 type Command struct {
 	Run         *Run      `yaml:"run"`
 	Where       *string   `yaml:"where"`
+	Times       *int32    `yaml:"times"`
 	Type        *string   `yaml:"type"`
 	Description *string   `yaml:"description"`
 	Variants    []Variant `yaml:"variants"`

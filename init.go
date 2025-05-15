@@ -1,12 +1,13 @@
-commands:
+package main
+					
+const Init = 
+`commands:
+
   loop:
     run: echo "Hello world"
     times: 10
     description: "Runs command 10 times"
-  
-  install:
-    run: go install ./...
-    description: Installs godo from your local source code
+
   fail:
     run: 
       - a
@@ -14,21 +15,7 @@ commands:
       - echo Works
     description: This code will fail twice
 
-  test:
-    run: 
-      - go clean -testcache
-      - go test ./...
-    description: Runs all the test
-
-  testv:
-    run: 
-      - go clean -testcache
-      - go test ./... -v
-    description: Runs all the test in verbose mode
-
-
-  os: # Variants allow os indipendent commands to be ran the platform is based on GOOS. 
-      # Here is a list of possible GOOS: https://gist.github.com/asukakenji/f15ba7e588ac42795f421b48b8aede63
+  os:    
     variants:
       - run: echo Windows
         platform: windows
@@ -37,7 +24,6 @@ commands:
       - run: echo Unkown
         platform: defualt
     description: Tells you what os you are running
-
 
 # A command can have these values
 # run - one or more commands that will run in the given order
@@ -48,5 +34,4 @@ commands:
 # variants - allows for better control over how commands are ran in different enviroments 
 #     variants can have these values
 #       run - the same as commands run (if the command has run commands the variants will be ignored)
-#       platform - can be any value that is in GOOS or defualt
-#       type - the same as commands type
+#       platform - can be any value that is in GOOS or defualt`

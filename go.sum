@@ -1,3 +1,5 @@
+github.com/VincentBrodin/suddig v0.0.0-20250508204840-870ec81c7636 h1:19E9JQplcZ22jDXmV6K9nDte8Gp++I1n0geX5nxpBYU=
+github.com/VincentBrodin/suddig v0.0.0-20250508204840-870ec81c7636/go.mod h1:OyHD1WgJrW5gr+LylunLtB7VdxESFUAWdksuT+uakww=
 github.com/chzyer/logex v1.1.10 h1:Swpa1K6QvQznwJRcfTfQJmTE72DqScAa40E+fbHEXEE=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e h1:fY5BOSpyZCqRo5OhCuC+XN+r/bBCmeuuJtjz+bCNIf8=
