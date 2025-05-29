@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path"
@@ -8,6 +9,7 @@ import (
 	"github.com/VincentBrodin/godo/pkg/engine"
 	"github.com/VincentBrodin/godo/pkg/parser"
 	"github.com/VincentBrodin/godo/pkg/utils"
+	"github.com/VincentBrodin/whale/codes"
 	"github.com/VincentBrodin/whale/list"
 
 	"slices"
@@ -90,13 +92,21 @@ func listCommands(godoFile *parser.GodoFile) error {
 	slices.Sort(keys)
 	keys = append(keys, "close")
 
-	
-	list := list.New(list.DefualtConfig())
+	l := list.New(list.DefualtConfig())
+	l.Config.RenderItem = func(item string, selected bool, config list.Config) string {
+		description := ""
+		if godoFile.Commands[item].Description != nil {
+			description = *godoFile.Commands[item].Description
+		}
+		if selected {
+			return fmt.Sprintf("  > %s: %s%s", item, codes.Muted, description)
+		}
+		return fmt.Sprintf("%s    %s: %s", codes.Muted, item, description)
+	}
+	l.Config.Prompt = "Select command"
 
-	list.Config.Prompt = "Select command"
+	index, err := l.Prompt(keys)
 
-	index, err := list.Prompt(keys)
-	
 	if err != nil {
 		log.Printf("Prompt failed %v\n", err)
 		return err
