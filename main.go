@@ -103,7 +103,7 @@ func listCommands(godoFile *parser.GodoFile) error {
 		}
 		return fmt.Sprintf("%s    %s: %s", codes.Muted, item, description)
 	}
-	l.Config.Prompt = "Select command"
+	l.Config.Lable = "Select command"
 
 	index, err := l.Prompt(keys)
 

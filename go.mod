@@ -8,7 +8,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // direct
 )
 
-require github.com/VincentBrodin/whale v0.0.1
+require github.com/VincentBrodin/whale v0.0.2
 
 require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
